@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>get City</title>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        .myChart {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="myChart">
+                <canvas id="myChart" width="800px" height="300"></canvas>
+            </div>
+
+            <table class="table table-bordered">
+                <thead>
+                    <th>PID</th>
+                    <th>IMG</th>
+                    <th>NAME</th>
+                    <th>PRICE</th>
+                    <th>STATE</th>
+                </thead>
+                <tbody>
+                    <!-- ajax -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- Jquery.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <!-- chaet.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        $.ajax({
+            method: "GET",
+            url:
+                // "../data/test.json",
+                "http://0.0.0.0:5000/query",
+            // "./covid19/getCity.json",
+            dataType: "json"
+        })
+            // data
+            .done(function (response) {
+                console.log("Data Saved: " + JSON.stringify(response));
+                const x = [];
+                const y = [];
+                const rgba = [];
+                // data
+                for (let i = 0; i < response.length; i++) {
+                    const item = response[i];
+                    x.push(item.name);
+                    y.push(item.price);
+                    rgba.push(`rgba(${getRandomInt(256)}, ${getRandomInt(256)}, ${getRandomInt(256)}, 0.2)`);
+
+
+                    // tbody
+                    $('tbody').append(`
+                        <tr>
+                            <td>${item.pid}</td>
+                            <td>${item.img}</td>
+                            <td>${item.name}</td>
+                            <td>${item.price}</td>
+                            <td>${item.state}</td>
+                        </tr>
+                    `);
+                }
+                console.log('x', 'y', x, y)
+
+                // chart.js   -  type: bar pie line
+                updateChart(x, y, rgba, 'bar')
+
+            });
+
+
+        // 畫圖random顏色
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max - 50) + 100);
+        }
+
+
+        // google chart範例 
+        function updateChart(labelArr, dataArr, backgroundArr, type_plot) {
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: type_plot,
+                data: {
+                    labels: labelArr,
+                    datasets: [{
+                        label: '# of y',
+                        data: dataArr,
+                        backgroundColor: backgroundArr,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>
