@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="row">
+
+            <form action="/model" ,methods='GET'>
+                <label for="birthday">BI:</label>
+                <input type="number" step="any" id="birthday" name="bi">
+                <label for="birthday">BI_Simple:</label>
+                <input type="number" step="any" id="birthday" name="bis">
+                <label for="birthday">BI_MA:</label>
+                <input type="number" id="birthday" step="any" name="bim">
+                <input type="submit" value="提交">
+            </form>
+
+
+        </div>
+
+        <div class="row">
+
+            <div> 預測結果：{{predict}}</div>
+
+
+        </div>
+    </div>
+</body>
+
+</html>

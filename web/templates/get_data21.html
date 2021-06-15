@@ -16,8 +16,6 @@
     </style>
 </head>
 
-<!-- ( date,link,art,push): -->
-
 <body>
     <div class="container">
         <div class="row">
@@ -25,20 +23,18 @@
                 <canvas id="myChart" width="800px" height="300"></canvas>
             </div>
 
-            <table class="table table-bordered" ID='id1'>
+            <table class="table table-bordered">
                 <thead>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>Link</th>
-                    <th>Article</th>
-                    <th>Push</th>
+                    <th>PID</th>
+                    <th>IMG</th>
+                    <th>NAME</th>
+                    <th>PRICE</th>
+                    <th>STATE</th>
                 </thead>
                 <tbody>
                     <!-- ajax -->
                 </tbody>
             </table>
-
-
         </div>
     </div>
 
@@ -54,9 +50,8 @@
             method: "GET",
             url:
                 // "../data/test.json",
-                "http://127.0.0.1:5000/query_article",
-            // "http://0.0.0.0:5000/query_article",
-            // "./covid19/getArticleData.json",
+                "http://0.0.0.0:5000/query",
+            // "./covid19/getCity.json",
             dataType: "json"
         })
             // data
@@ -72,16 +67,15 @@
                     y.push(item.price);
                     rgba.push(`rgba(${getRandomInt(256)}, ${getRandomInt(256)}, ${getRandomInt(256)}, 0.2)`);
 
-                    // <!-- ( date,link,art,push): -->
 
                     // tbody
                     $('tbody').append(`
                         <tr>
-                            <td>${item.id}</td>
-                            <td>${item.date}</td>
-                            <td>${item.link}</td>
-                            <td>${item.art}</td>
-                            <td>${item.push}</td>
+                            <td>${item.pid}</td>
+                            <td>${item.img}</td>
+                            <td>${item.name}</td>
+                            <td>${item.price}</td>
+                            <td>${item.state}</td>
                         </tr>
                     `);
                 }

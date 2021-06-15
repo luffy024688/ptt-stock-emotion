@@ -1,1 +1,237 @@
-hi {{res.name}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>get City</title>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        .myChart {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<!-- ( date,link,art,push): -->
+
+<body>
+
+
+
+    <div class="container">
+
+        <div class="row">
+
+            <form action="/ptt" ,methods='GET'>
+                <label for="birthday">選擇日期:</label>
+                <input type="date" id="birthday" name="bd">
+                <input type="submit" value="提交">
+            </form>
+        </div>
+        <div class="row">
+            <div class="myChart">
+                <canvas id="myChart" width="800px" height="300"></canvas>
+            </div>
+
+            <div class="myChart">
+                <canvas id="pie-chart" width="800" height="450"></canvas>
+            </div>
+
+            <!-- <div class="myChart">
+                <canvas id="wc-chart" width="800" height="450"></canvas>
+            </div> -->
+
+            <!-- (date,vix,BI,close,pos,neg,seg) -->
+            <table class="table table-bordered" ID='id2'>
+                <thead>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>VIX</th>
+                    <th>BI</th>
+                    <th>close</th>
+                    <th>pos</th>
+                    <th>neg</th>
+                    <th>seg</th>
+                </thead>
+                <tbody>
+                    <!-- ajax -->
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="row">
+            <div class="alert alert-primary col-6 mx-auto" role="alert">
+                <h1 class="col-6 mx-auto display-4 text-center">{{ predict }}</h1>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Jquery.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <!-- chaet.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+    <script>
+        $.ajax({
+            method: "GET",
+            url:
+                // "../data/test2.json",
+                "http://127.0.0.1:5000/query_ptt_all",
+            // "http://0.0.0.0:5000/query_ptt", #????
+
+
+            // "./covid19/getArticleData.json",
+            dataType: "json"
+        })
+            // data
+            .done(function (response) {
+                console.log("Data Saved: " + JSON.stringify(response));
+                const x = [];
+                const y1 = [];
+                const y2 = [];
+                const rgba = [];
+                // data
+                for (let i = 0; i < response.length; i++) {
+                    const item = response[i];
+                    x.push(item.date);
+                    y1.push(item.close);
+                    y2.push(item.BI);
+                    rgba.push(`rgba(${getRandomInt(256)}, ${getRandomInt(256)}, ${getRandomInt(256)}, 0.2)`);
+
+                    // (date,vix,BI,close,pos,neg,seg)
+                    // tbody
+                    $('tbody').append(`
+                        <tr>
+                            <td>${item.id}</td>
+                            <td>${item.date}</td>
+                            <td>${item.vix}</td>
+                            <td>${item.BI}</td>
+                            <td>${item.close}</td>
+                            <td>${item.pos}</td>
+                            <td>${item.neg}</td>
+                            <td>${item.seg}</td>
+                        </tr>
+                    `);
+                }
+                console.log('x', 'y', x, y1, y2)
+                console.log('rgba', rgba)
+
+
+                // chart.js   -  type: bar pie line
+                updateChart(x, y1, y2, rgba, 'line')
+
+
+            });
+
+
+        // 畫圖random顏色
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max - 50) + 100);
+        }
+
+
+        // google chart範例 
+        function updateChart(labelArr, dataArr1, dataArr2, backgroundArr, type_plot) {
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: type_plot,
+                data: {
+                    labels: labelArr,
+                    datasets: [{
+                        label: '# of y',
+                        data: dataArr1,
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 3
+                    }, {
+                        label: '# of y',
+                        data: dataArr2,
+                        backgroundColor: 'rgb(100, 99, 132)',
+                        borderColor: 'rgba(100, 99, 132, 1)',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+        }
+
+
+
+
+    </script>
+
+    <!-- #---------------- -->
+    <script>
+        $.ajax({
+            method: "GET",
+            url:
+                // "../data/test2.json",
+                "http://127.0.0.1:5000/query_ptt?bd={{d}}",
+            // "http://0.0.0.0:5000/query_ptt", #????
+
+
+            // "./covid19/getArticleData.json",
+            dataType: "json"
+        })
+            // data
+            .done(function (response) {
+                console.log("Data Saved: " + JSON.stringify(response));
+
+
+                // chart.js   -  type: bar pie line
+                console.log('pos:', response[0]['pos'], response[0]['neg'])
+                updateChartPie([response[0]['pos'], response[0]['neg']])
+                // updateChartWc()
+
+            });
+
+
+
+        // google chart範例 
+        function updateChartPie(data) {
+
+            var ctx = document.getElementById("pie-chart").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ["pos", "neg"],
+                    datasets: [{
+                        data: data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132)',
+                            'rgba(54, 162, 235)',
+
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {}
+            });
+
+        }
+
+
+
+    </script>
+
+
+</body>
+
+</html>

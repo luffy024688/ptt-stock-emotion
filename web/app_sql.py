@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, url_for,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import pandas as pd
+import numpy as np
 
-#import recognition.load_model as model # model
+import model.load_model as model # model
 
 
 app = Flask(__name__)
@@ -76,6 +77,27 @@ def index():
                            page_header="page_header",  # 變數
                            current_time=datetime.utcnow())
 
+
+@app.route('/article')  # @是裝飾器
+def article():
+    # return 'Hello my flask!'
+    return render_template('get_data.html',   #渲染
+                           page_header="page_header",  # 變數
+                           current_time=datetime.utcnow())
+
+@app.route('/ptt')  # @是裝飾器
+def ptt():
+    d = request.args.get("bd")
+    # 預設
+    if d is None:
+        d = '2020-10-07'
+
+    return render_template('get_data2.html',   #渲染
+                           d = d,  # 變數：html  = function內的
+                           page_header="page_header",  # 變數
+                           current_time=datetime.utcnow())
+
+#---------------------------------------------------------
 # ## create table
 # @app.route('/create')   # flask 要在def裡面才會去運行
 # def create():
@@ -115,33 +137,71 @@ import pymysql.cursors
 #使用pymysql指令來連接數據庫
 cnx=pymysql.connect(host='localhost',user='root',db='ptt_stock',cursorclass=pymysql.cursors.DictCursor
 )
-@app.route('/query', methods=['GET', 'POST'])
-def query():
+@app.route('/query_article', methods=['GET', 'POST'])
+def query_article():
     cursor = cnx.cursor()
-    sql = "SELECT * from article"
+    sql = "SELECT * from article WHERE date='2019-12-02' ORDER BY push DESC LIMIT 5"
     cursor.execute(sql)
     res=cursor.fetchall() #取出結果 fetchone() fetchall()
 
     return jsonify(res)
+    
+@app.route('/query_ptt', methods=['GET', 'POST'])
+def query_ptt():
+    d = request.args.get("bd")
+    cursor = cnx.cursor()
+    sql = "SELECT * from ptt WHERE date= '{}' ".format(d)   #ORDER BY push DESC LIMIT 5"
+    cursor.execute(sql)
+    res=cursor.fetchall() #取出結果 fetchone() fetchall()
+
+    return jsonify(res) 
+
+@app.route('/query_ptt_all', methods=['GET', 'POST'])
+def query_ptt_all():
+    cursor = cnx.cursor()
+    sql = "SELECT * from ptt"   #ORDER BY push DESC LIMIT 5"
+    cursor.execute(sql)
+    res=cursor.fetchall() #取出結果 fetchone() fetchall()
+
+    return jsonify(res)    
 
 
+#---------------------------
+# model
+@app.route('/model', methods=['GET', 'POST'])
+def get_file():
+    if request.method == "GET":
+        bi = request.args.get("bi")        
+        bis = request.args.get("bis")
+        bim = request.args.get("bim")
+        try:
+            data  = np.array([[float(bi),float(bis),float(bim)]])
+            print('00000',data[0])
+        except:
+            data = np.array([[0,0,0]])
+        
+        
+        # predict = model.recog_digit(data)[0][0]
+        predict = model.predict_model(data)[0][0]
+             
+        return render_template('model.html', page_header="upload hand write picture",predict = predict) #
 
-
-
-
-## model
-# @app.route('/model', methods=['GET', 'POST'])
-# def get_file():
-#     if request.method == "GET":
-#         return render_template('file.html', page_header="upload hand write picture")
-#     elif request.method == "POST":
-#         file = request.files['file']
-#         if file:
-#             filename = str(uuid.uuid4())+"_"+file.filename
-#             file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-#             predict = model.recog_digit(filename)
-#         return render_template('recog_result.html', page_header="hand writing digit recognition", predict = predict, src = url_for('static', filename=f'uploaded/{filename}'))
-
-
+@app.route('/model2', methods=['GET', 'POST'])
+def get_file2():
+    if request.method == "GET":
+        bi = request.args.get("bi")        
+        
+        try:
+            data  = np.array([[float(bi)]])
+            print('00000',data)
+        except:
+            data = np.array([[0]])
+            print('00001',data)
+        
+        
+        predict = model.predict_model2(data)[0]
+        print('predict:',predict)
+             
+        return render_template('model2.html', page_header="upload hand write picture",predict = predict) #
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

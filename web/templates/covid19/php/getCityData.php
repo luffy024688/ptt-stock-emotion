@@ -1,6 +1,6 @@
 <?php
 $db_host = 'localhost';
-$db_name = 'mask';
+$db_name = 'ptt_stock';
 $db_user = 'root';
 $db_pass = '';
 
@@ -19,7 +19,7 @@ try {
     echo 'Ex:' . $ex->getMessage();
 }
 
-$sql = "SELECT * FROM `csse_covid_19_daily_reports_town` WHERE `縣市別` = '臺北市' AND `區域` != '區域加總'";
+$sql = "SELECT * FROM `article` WHERE `date` = '2019-11-30';
 $rows = $pdo->query($sql)->fetchAll();
 
 // CORS 問題
