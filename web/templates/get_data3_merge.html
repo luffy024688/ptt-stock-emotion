@@ -46,7 +46,7 @@
             </div> -->
 
             <!-- (date,vix,BI,close,pos,neg,seg) -->
-            <table class="table table-bordered" ID='id2'>
+            <table class="table table-bordered">
                 <thead>
                     <th>ID</th>
                     <th>Date</th>
@@ -57,7 +57,7 @@
                     <th>neg</th>
                     <th>seg</th>
                 </thead>
-                <tbody>
+                <tbody ID='id1'>
                     <!-- ajax -->
                 </tbody>
             </table>
@@ -69,7 +69,31 @@
                 <h1 class="col-6 mx-auto display-4 text-center">{{ predict }}</h1>
             </div>
         </div>
+
+
+
     </div>
+
+    <div class="container">
+        <div class="row">
+
+            <table class="table table-bordered">
+                <thead>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Link</th>
+                    <th>Article</th>
+                    <th>Push</th>
+                </thead>
+                <tbody ID='id2'>
+                    <!-- ajax -->
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+
 
 
     <!-- Jquery.js -->
@@ -85,8 +109,7 @@
             method: "GET",
             url:
                 // "../data/test2.json",
-                "http://127.0.0.1:5000/query_ptt?bd={{d}}",
-            // "http://127.0.0.1:5000/query_ptt_all",
+                "http://127.0.0.1:5000/query_ptt_all",
             // "http://0.0.0.0:5000/query_ptt", #????
 
 
@@ -110,7 +133,7 @@
 
                     // (date,vix,BI,close,pos,neg,seg)
                     // tbody
-                    $('tbody').append(`
+                    $('tbody#id1').append(`
                         <tr>
                             <td>${item.id}</td>
                             <td>${item.date}</td>
@@ -178,15 +201,13 @@
 
     </script>
 
-    <!-- #pie----------------->
+    <!-- #---------------- -->
     <script>
         $.ajax({
             method: "GET",
             url:
                 // "../data/test2.json",
                 "http://127.0.0.1:5000/query_ptt?bd={{d}}",
-            // "http://127.0.0.1:5000/query_ptt_all",
-
             // "http://0.0.0.0:5000/query_ptt", #????
 
 
@@ -196,7 +217,6 @@
             // data
             .done(function (response) {
                 console.log("Data Saved: " + JSON.stringify(response));
-
 
 
                 // chart.js   -  type: bar pie line
@@ -230,6 +250,50 @@
             });
 
         }
+
+
+
+    </script>
+
+    <script>
+        $.ajax({
+            method: "GET",
+            url:
+                // "../data/test.json",
+                "http://127.0.0.1:5000/query_article",
+            // "http://0.0.0.0:5000/query_article",
+            // "./covid19/getArticleData.json",
+            dataType: "json"
+        })
+            // data
+            .done(function (response) {
+                console.log("Data Saved: " + JSON.stringify(response));
+                const x = [];
+                const y = [];
+                const rgba = [];
+                // data
+                for (let i = 0; i < response.length; i++) {
+                    const item = response[i];
+                    x.push(item.name);
+                    y.push(item.price);
+                    rgba.push(`rgba(${getRandomInt(256)}, ${getRandomInt(256)}, ${getRandomInt(256)}, 0.2)`);
+
+                    // <!-- ( date,link,art,push): -->
+
+                    // tbody
+                    $('tbody#id2').append(`
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${item.date}</td>
+                        <td>${item.link}</td>
+                        <td>${item.art}</td>
+                        <td>${item.push}</td>
+                    </tr>
+                `);
+                }
+
+
+            });
 
 
 

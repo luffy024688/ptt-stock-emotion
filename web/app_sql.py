@@ -90,12 +90,27 @@ def ptt():
     d = request.args.get("bd")
     # 預設
     if d is None:
-        d = '2020-10-07'
-
+        d = '2021-05-31'
     return render_template('get_data2.html',   #渲染
                            d = d,  # 變數：html  = function內的
                            page_header="page_header",  # 變數
                            current_time=datetime.utcnow())
+    # return render_template('get_data2.html',   #渲染
+    #                        page_header="page_header",  # 變數
+    #                        current_time=datetime.utcnow())                    
+                           
+# @app.route('/all')  # @是裝飾器
+# def all():
+#     d = request.args.get("bd")
+#     # 預設
+#     if d is None:
+#         d = '2020-10-07'
+#     # return 'Hello my flask!'
+#     return render_template('get_data3_merge.html',   #渲染
+#                            d = d,  # 變數：html  = function內的
+#                            page_header="page_header",  # 變數
+#                            current_time=datetime.utcnow())                        
+                           
 
 #---------------------------------------------------------
 # ## create table
@@ -193,15 +208,19 @@ def get_file2():
         
         try:
             data  = np.array([[float(bi)]])
-            print('00000',data)
+            # print('00000',data)
         except:
             data = np.array([[0]])
-            print('00001',data)
+            # print('00001',data)
         
         
         predict = model.predict_model2(data)[0]
-        print('predict:',predict)
+        # print('predict:',predict)
+        if predict == 1:
+            p = '/static/img/up.png'
+        else:
+            p = '/static/img/down.png'
              
-        return render_template('model2.html', page_header="upload hand write picture",predict = predict) #
+        return render_template('model2.html', page_header="upload hand write picture",p = p) #
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

@@ -5,30 +5,181 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>fix</title>
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link href="fontawesome-free-5.15.3-web/css/all.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f7f6;
+        }
+
+        .container {
+            width: 100%;
+            padding: 0;
+            /* border: 2px solid palevioletred; */
+        }
+
+        .row-top {
+            /* 將"聯繫我們"橫過去 */
+            display: flex;
+            justify-content: space-between;
+            margin: 0px 6px;
+            padding: 20px 0px;
+        }
+
+        .navbar {
+            padding: 0;
+        }
+
+        .main {
+            color: #000;
+            display: flex;
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .contact {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .fab {
+            margin: 2px;
+            font-size: 1.5rem;
+        }
+
+        .select {
+            font-size: 1.2rem;
+        }
+
+
+        .forecast {
+            width: 80%;
+        }
+
+
+
+
+        .forcast {
+            width: 100%;
+            text-align: center;
+        }
+
+
+        th {
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .table-bordered {
+            table-layout: fixed;
+            word-wrap: break-word;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+
+        /* 按鈕處有問題，縮小時會換行 */
+        .form {
+            padding: 15px 0;
+            display: flex;
+        }
+
+        .btn {
+            float: right;
+            width: 8%;
+            margin: 0 10px;
+        }
+
+        .form-control {
+            width: 80%;
+            margin: 0 6px 0 0;
+        }
+
+        .select {
+            /* 改文字高度與粗體 */
+            width: 10%;
+            margin: 6px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* 按鈕處有問題，縮小時會換行 */
+
+        footer {
+            height: 100px;
+            background-color: #383838;
+            color: #fff;
+            line-height: 100px;
+            text-align: center;
+            margin-top: 150px;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
+    <nav class="container" style="border-bottom: 1px solid #ccc">
+        <div class="row-top">
+            <div class="navbar right">
+                <a href="/pages-demo/contact_us.php" class="contact">About us｜Contact</a>
+            </div>
+            <div class="navbar name">
+                <div class="main">大眾情緒與股市分析</div>
+            </div>
+            <div class="navbar icon">
+                <i class="fab fa-facebook-square"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-line"></i>
+            </div>
 
-        <div class="row">
+        </div>
+    </nav>
 
-            <form action="/model2" ,methods='GET'>
-                <label for="birthday">BI:</label>
-                <input type="number" step="any" id="birthday" name="bi">
-                <input type="submit" value="提交">
+    <main class="container">
+        <div>
+
+            <form class="form" action="/model2" method="GET">
+                <label for="exampleFormControlInput1" class='select'>請輸入BI值</label>
+                <input type="number" step="any" id="my-date" class="form-control" name="bi">
+                <button type="submit" class="btn btn-primary">送出</button>
             </form>
+        </div>
+
+
+        <div class="container row">
+
+            <!-- <div> 預測明日股價結果：{{p}}</div> -->
+            <div>
+                <h5> 預測明日股價結果：</h5>
+            </div>
+
+            <div class="img-wrap">
+                <img class="cover" src={{p}} alt="" title="">
+
+                <!-- <img class="cover" src=/static/img/down.png alt="" title=""> -->
+
+
+
+            </div>
 
 
         </div>
+        <section></section>
 
-        <div class="row">
+    </main>
 
-            <div> 預測結果：{{predict}}</div>
-
+    <footer class="container">
+        <p>AI人工智慧與資料分析實戰班課程 2021/4/12-2021/6/18</p>
 
         </div>
-    </div>
+    </footer>
+
+
 </body>
 
 </html>
