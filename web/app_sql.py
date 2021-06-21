@@ -150,34 +150,36 @@ def insert_article():
 #--------------------
 import pymysql.cursors
 #使用pymysql指令來連接數據庫
-cnx=pymysql.connect(host='localhost',user='root',db='ptt_stock',cursorclass=pymysql.cursors.DictCursor
-)
+
 @app.route('/query_article', methods=['GET', 'POST'])
 def query_article():
+    cnx=pymysql.connect(host='localhost',user='root',db='ptt_stock',cursorclass=pymysql.cursors.DictCursor)
     cursor = cnx.cursor()
     sql = "SELECT * from article WHERE date='2019-12-02' ORDER BY push DESC LIMIT 5"
     cursor.execute(sql)
     res=cursor.fetchall() #取出結果 fetchone() fetchall()
-
+    cnx.close()
     return jsonify(res)
     
 @app.route('/query_ptt', methods=['GET', 'POST'])
 def query_ptt():
+    cnx=pymysql.connect(host='localhost',user='root',db='ptt_stock',cursorclass=pymysql.cursors.DictCursor)
     d = request.args.get("bd")
     cursor = cnx.cursor()
     sql = "SELECT * from ptt WHERE date= '{}' ".format(d)   #ORDER BY push DESC LIMIT 5"
     cursor.execute(sql)
     res=cursor.fetchall() #取出結果 fetchone() fetchall()
-
+    cnx.close()
     return jsonify(res) 
 
 @app.route('/query_ptt_all', methods=['GET', 'POST'])
 def query_ptt_all():
+    cnx=pymysql.connect(host='localhost',user='root',db='ptt_stock',cursorclass=pymysql.cursors.DictCursor)
     cursor = cnx.cursor()
     sql = "SELECT * from ptt"   #ORDER BY push DESC LIMIT 5"
     cursor.execute(sql)
     res=cursor.fetchall() #取出結果 fetchone() fetchall()
-
+    cnx.close()
     return jsonify(res)    
 
 
